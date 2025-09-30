@@ -19,6 +19,7 @@ export const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.large};
   margin: 0;
   cursor: pointer;
+  color: red;
 `;
 
 export const Nav = styled.nav``;

@@ -7,7 +7,12 @@ Este repositório contém o código-fonte do projeto de front-end para a platafo
 * **Front-end (Aplicação):** **[https://techchallenge-frontend-main.onrender.com/](https://techchallenge-frontend-main.onrender.com/)**
 * **Back-end (API Consumida):** **[https://techchallengeblog.onrender.com/api](https://techchallengeblog.onrender.com/api)**
 
-> **Atenção:** Ambas as aplicações (front-end e back-end) estão hospedadas no plano gratuito do Render e hibernam ("dormem") após 15 minutos de inatividade. O **primeiro acesso pode levar de 30 a 60 segundos para "acordar" os serviços**.
+> ### ⚠️ Atenção: Como "Acordar" a Aplicação
+>
+> Ambas as aplicações estão no plano gratuito do Render e hibernam ("dormem") após 15 minutos de inatividade. Para uma melhor experiência no primeiro acesso, siga estes passos:
+>
+> 1.  **Primeiro, "acorde" o back-end:** Acesse a URL da API, por exemplo, a documentação do Swagger: **[https://techchallengeblog.onrender.com/api](https://techchallengeblog.onrender.com/api)**. Aguarde cerca de 30-60 segundos até a página carregar completamente.
+> 2.  **Agora, acesse o front-end:** Abra a URL da aplicação: **[https://techchallenge-frontend-main.onrender.com/](https://techchallenge-frontend-main.onrender.com/)**. Como o back-end já está ativo, a aplicação carregará os posts corretamente.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -34,15 +39,15 @@ A aplicação foi estruturada seguindo as melhores práticas do ecossistema Reac
 
 5.  **Estilização:** Optamos por **Styled Components** para uma abordagem de CSS-in-JS, que permite escrever CSS diretamente nos arquivos de componente. Isso garante que os estilos sejam escopados e viajem junto com seus respectivos componentes.
 
-## ⚙️ Como Rodar o Projeto (Ambiente de Desenvolvimento Local)
+## ⚙️ Como Rodar a Aplicação Principal (com Docker)
 
-Existem duas formas de rodar o projeto localmente: com Docker (recomendado para simular o ambiente de produção) ou com Node.js diretamente. Ambas as formas requerem que o **back-end esteja em execução**.
+Esta é a forma recomendada para rodar a aplicação final, pois simula o ambiente de produção.
 
-### Opção 1: Rodar com Docker (Recomendado)
+**Pré-requisitos:**
+* Docker Desktop instalado e em execução.
+* O back-end do projeto precisa estar rodando (localmente ou em produção).
 
-**Pré-requisitos:** Docker Desktop instalado e em execução.
-
-1.  **Clone o Repositório e Navegue até a Pasta:**
+1.  **Clone o Repositório:**
     ```bash
     git clone git@github.com:jpcolombari/techchallenge-frontend.git
     cd techchallenge-frontend
@@ -62,20 +67,27 @@ Existem duas formas de rodar o projeto localmente: com Docker (recomendado para 
     ```
 5.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`**.
 
-### Opção 2: Rodar com Node.js
+**Comandos úteis do Docker:**
+* Para parar o container: `docker stop frontend-local`
+* Para iniciar novamente: `docker start frontend-local`
+* Para remover o container: `docker rm -f frontend-local`
+
+## 📖 Como Trabalhar com o Storybook (Desenvolvimento de Componentes)
+
+O Storybook é uma ferramenta de desenvolvimento para visualizar e testar os componentes da UI de forma isolada. Ele deve ser rodado **fora do Docker**, diretamente na sua máquina.
 
 **Pré-requisitos:** Node.js v20+ e `npm` instalados.
 
-1.  Siga os passos 1 e 2 da opção com Docker.
-2.  **Instale as Dependências:**
+1.  **Instale as Dependências (se ainda não o fez):**
+    Na raiz do projeto, execute:
     ```bash
     npm install
     ```
-3.  **Inicie o Servidor de Desenvolvimento:**
+2.  **Inicie o Storybook:**
     ```bash
-    npm run dev
+    npm run storybook
     ```
-4.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`**.
+3.  **Acesso:** O Storybook estará disponível em **`http://localhost:6006`**.
 
 ## 🎯 Desafios e Aprendizados
 

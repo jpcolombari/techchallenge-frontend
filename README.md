@@ -1,87 +1,85 @@
-# Tech Challenge - Front-end do Blog
+# 🚀 Tech Challenge - Front-end do Blog
 
-Este repositório contém o código-fonte do projeto de front-end para a plataforma de blogging, desenvolvido como parte do Tech Challenge da Pós-Graduação em Full Stack Development da FIAP.
+Este repositório contém o código-fonte do projeto de front-end para a plataforma de blogging, desenvolvido como parte do Tech Challenge da Pós-Graduação em Full Stack Development da FIAP. A interface foi construída como uma **Single-Page Application (SPA)** moderna e responsiva, utilizando React e Next.js para consumir a API RESTful do back-end.
 
-O objetivo foi construir uma interface moderna, responsiva e funcional utilizando React e Next.js para consumir a API RESTful desenvolvida na fase anterior do desafio.
+## 🌐 Acesso ao Projeto em Produção
 
-## Tecnologias Utilizadas
+* **Front-end (Aplicação):** **[https://techchallenge-frontend-main.onrender.com/](https://techchallenge-frontend-main.onrender.com/)**
+* **Back-end (API Consumida):** **[https://techchallengeblog.onrender.com/api](https://techchallengeblog.onrender.com/api)**
 
-* **React & Next.js:** Biblioteca e framework para a construção da interface de usuário, com foco em performance e experiência de desenvolvimento.
-* **TypeScript:** Garante a tipagem estática do código, tornando-o mais robusto e menos propenso a erros.
-* **Styled Components:** Solução de CSS-in-JS para a criação de componentes estilizados, componentizados e com tema.
+> **Atenção:** Ambas as aplicações (front-end e back-end) estão hospedadas no plano gratuito do Render e hibernam ("dormem") após 15 minutos de inatividade. O **primeiro acesso pode levar de 30 a 60 segundos para "acordar" os serviços**.
+
+## 🛠️ Tecnologias Utilizadas
+
+* **React & Next.js:** Framework para a construção da interface de usuário.
+* **TypeScript:** Garante a tipagem estática do código, tornando-o mais robusto.
+* **Styled Components:** Solução de CSS-in-JS para a criação de componentes estilizados e com tema.
 * **Storybook:** Ferramenta para desenvolvimento e documentação isolada do UI Kit de componentes.
+* **Docker:** Containerização da aplicação para garantir consistência entre ambientes.
+* **GitHub Actions:** Automação de CI/CD para build e publicação da imagem Docker.
 * **Axios:** Cliente HTTP para realizar a comunicação com a API do back-end.
-* **Font Awesome:** Biblioteca de ícones para melhorar a usabilidade da interface.
-* **Radix UI:** Biblioteca de componentes "headless" para a criação de primitivos de UI acessíveis, como o Modal.
-* **ESLint & Prettier:** Ferramentas para garantir a qualidade e a padronização do código.
+* **Radix UI:** Biblioteca de componentes "headless" para a criação de primitivos de UI acessíveis.
 
-## Documentação e Demonstração
+## 🧱 Arquitetura da Aplicação
 
-* **Storybook (UI Kit):** A documentação visual de todos os componentes reutilizáveis pode ser acessada localmente após a instalação do projeto.
-* **Deploy em Produção:** Uma versão da aplicação está publicada na Render e pode ser acessada aqui: **[https://techchallengeblog.onrender.com/](https://techchallengeblog.onrender.com/)**
+A aplicação foi estruturada seguindo as melhores práticas do ecossistema React/Next.js, com foco em componentização, gerenciamento de estado e escalabilidade.
 
-## Setup e Instalação
+1.  **Estrutura de Roteamento:** Utilizamos o **App Router** do Next.js, onde a estrutura de pastas dentro de `src/app` define automaticamente as rotas da aplicação (ex: `app/posts/[id]/page.tsx` cria a rota dinâmica para visualizar um post).
 
-Para rodar este projeto, você precisará ter o **Back-end** e o **Front-end** rodando em sua máquina.
+2.  **Componentização:** A interface foi dividida em pequenos componentes reutilizáveis (localizados em `src/components`), como `Button`, `Input`, `Modal` e `PostCard`. Essa abordagem facilita a manutenção e permite o desenvolvimento isolado de cada parte da UI, documentada com o **Storybook**.
 
-### 1. Configurando o Back-end
+3.  **Gerenciamento de Estado:** Para o estado de autenticação do usuário, foi implementado o **Context API** do React (`AuthContext`). Isso permite que o estado (se o usuário está logado ou não) seja compartilhado globalmente por toda a aplicação sem a necessidade de "prop drilling".
 
-O back-end é um projeto separado que precisa estar em execução para que o front-end possa consumir os dados.
+4.  **Comunicação com a API:** Toda a lógica de comunicação com o back-end está centralizada em `src/services/api.ts`. Utilizamos o **Axios** para fazer as requisições HTTP, mantendo a lógica de negócio desacoplada dos componentes de UI.
 
-*   **Siga as instruções de instalação e execução** que estão no repositório do back-end: **[https://github.com/jpcolombari/TechChallengeBlog](https://github.com/jpcolombari/TechChallengeBlog)**
+5.  **Estilização:** Optamos por **Styled Components** para uma abordagem de CSS-in-JS, que permite escrever CSS diretamente nos arquivos de componente. Isso garante que os estilos sejam escopados e viajem junto com seus respectivos componentes.
 
-Após seguir os passos, o back-end deverá estar rodando em `http://localhost:3000`.
+## ⚙️ Como Rodar o Projeto (Ambiente de Desenvolvimento Local)
 
-### 2. Configurando o Front-end (Este Repositório)
+Existem duas formas de rodar o projeto localmente: com Docker (recomendado para simular o ambiente de produção) ou com Node.js diretamente. Ambas as formas requerem que o **back-end esteja em execução**.
 
-**a) Clone o Repositório:**
-```bash
-git clone git@github.com:jpcolombari/techchallenge-frontend.git
-cd techchallenge-frontend
-```
+### Opção 1: Rodar com Docker (Recomendado)
 
-**b) Crie o Arquivo de Ambiente:**
-Crie um arquivo chamado `.env.local` na raiz do projeto e adicione a seguinte linha:
-```
-NEXT_PUBLIC_API_URL=http://localhost:3000
-```
+**Pré-requisitos:** Docker Desktop instalado e em execução.
 
-**c) Instale as Dependências:**
-```bash
-npm install
-```
+1.  **Clone o Repositório e Navegue até a Pasta:**
+    ```bash
+    git clone git@github.com:jpcolombari/techchallenge-frontend.git
+    cd techchallenge-frontend
+    ```
+2.  **Crie o Arquivo de Ambiente:**
+    Crie um arquivo chamado `.env.local` na raiz do projeto e adicione a seguinte linha para apontar para o back-end local:
+    ```
+    NEXT_PUBLIC_API_URL=http://localhost:3000
+    ```
+3.  **Construa a Imagem Docker:**
+    ```bash
+    docker build -t techchallenge-frontend:local .
+    ```
+4.  **Inicie o Container:**
+    ```bash
+    docker run -d -p 3001:3001 --name frontend-local techchallenge-frontend:local
+    ```
+5.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`**.
 
-## Como Rodar o Projeto
+### Opção 2: Rodar com Node.js
 
-Com o back-end já em execução, inicie o servidor de desenvolvimento do front-end:
+**Pré-requisitos:** Node.js v20+ e `npm` instalados.
 
-**1. Rodar a Aplicação Principal:**
-```bash
-npm run dev
-```
-A aplicação estará disponível em **`http://localhost:3001`**.
+1.  Siga os passos 1 e 2 da opção com Docker.
+2.  **Instale as Dependências:**
+    ```bash
+    npm install
+    ```
+3.  **Inicie o Servidor de Desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+4.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`**.
 
-**2. Rodar o Storybook (Opcional):**
-Para visualizar os componentes de forma isolada, em outro terminal, execute:
-```bash
-npm run storybook
-```
-O Storybook estará disponível em **`http://localhost:6006`**.
+## 🎯 Desafios e Aprendizados
 
-## Funcionalidades Implementadas
-
-*   **Listagem de Posts:** A página principal exibe todos os posts cadastrados em formato de cards.
-*   **Busca Dinâmica:** Um campo de busca na página principal e no painel de admin que filtra os posts em tempo real, conforme o usuário digita.
-*   **Leitura de Post:** Página dedicada para a leitura do conteúdo completo de um post.
-*   **Sistema de Autenticação:**
-    *   Fluxo completo de **Registro** e **Login** para usuários (professores) através de modais.
-    *   Gerenciamento de sessão com **Token JWT**, salvo no `localStorage`.
-    *   Uso de **Context API** para gerenciar o estado de autenticação globalmente.
-*   **Painel Administrativo (`/admin`):**
-    *   **Rota Protegida:** Acessível apenas para usuários autenticados.
-    *   **Dashboard:** Exibe uma tabela com todos os posts e permite a busca local.
-    *   **Criação de Post:** Um botão "Novo Post" abre um modal com um formulário para criar novas postagens.
-    *   **Exclusão de Post:** Cada post tem um botão "Excluir" que abre um modal de confirmação antes de remover o post.
-    *   **Edição de Post:** Um botão "Editar" abre um modal com o formulário já preenchido com os dados do post, permitindo a atualização.
-*   **Componentização com Storybook:** Todos os principais elementos de UI (`Button`, `Input`, `Modal`, `PostCard`, etc.) foram criados como componentes reutilizáveis e documentados no Storybook.
-*   **Responsividade:** O layout e os componentes foram construídos com princípios de design responsivo.
+* **Gerenciamento de Estado de Autenticação:** Implementar o `AuthContext` foi um desafio interessante para garantir que a interface reagisse corretamente às ações de login e logout sem a necessidade de recarregar a página, proporcionando uma verdadeira experiência de SPA.
+* **Docker e Variáveis de Ambiente:** Configurar o `Dockerfile` e o workflow de CI/CD para injetar corretamente a variável de ambiente `NEXT_PUBLIC_API_URL` foi um aprendizado crucial. A distinção entre variáveis de build-time (para o front-end) e run-time (para o back-end) ficou muito clara nesse processo.
+* **Roteamento e Páginas Dedicadas:** A decisão de migrar a funcionalidade de "Editar Post" de um modal para uma página dedicada (`/admin/edit/[id]`) melhorou significativamente a organização do código e a experiência do usuário, reforçando a importância da arquitetura de rotas.
+* **Deploy Contínuo:** Configurar o pipeline no GitHub Actions para construir a imagem Docker e publicá-la no GitHub Container Registry, e depois configurar o Render para fazer o deploy a partir dessa imagem, fechou o ciclo de automação e nos deu uma experiência real de um fluxo de trabalho de DevOps.

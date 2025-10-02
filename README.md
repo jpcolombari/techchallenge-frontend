@@ -39,13 +39,19 @@ A aplicação foi estruturada seguindo as melhores práticas do ecossistema Reac
 
 5.  **Estilização:** Optamos por **Styled Components** para uma abordagem de CSS-in-JS, que permite escrever CSS diretamente nos arquivos de componente. Isso garante que os estilos sejam escopados e viajem junto com seus respectivos componentes.
 
-## ⚙️ Como Rodar a Aplicação Principal (com Docker)
+## ⚙️ Ambiente de Desenvolvimento e Produção
 
-Esta é a forma recomendada para rodar a aplicação final, pois simula o ambiente de produção.
+Existem duas formas principais de rodar o projeto, cada uma com um objetivo diferente.
+
+### 1. Desenvolvimento Local (Dia a Dia)
+
+Esta é a forma **recomendada para o desenvolvimento diário**, pois oferece *hot-reload* (atualizações automáticas ao salvar um arquivo) e é mais rápida para codificar.
 
 **Pré-requisitos:**
-* Docker Desktop instalado e em execução.
-* O back-end do projeto precisa estar rodando (localmente ou em produção).
+* Node.js v20+ e `npm` instalados.
+* O back-end do projeto precisa estar rodando (com `docker compose up` na pasta do back-end).
+
+**Passos:**
 
 1.  **Clone o Repositório:**
     ```bash
@@ -57,15 +63,37 @@ Esta é a forma recomendada para rodar a aplicação final, pois simula o ambien
     ```
     NEXT_PUBLIC_API_URL=http://localhost:3000
     ```
-3.  **Construa a Imagem Docker:**
+3.  **Instale as Dependências:**
     ```bash
-    docker build -t techchallenge-frontend:local .
+    npm install
     ```
-4.  **Inicie o Container:**
+4.  **Inicie o Servidor de Desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+5.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`** com hot-reload ativado.
+
+### 2. Testando a Imagem de Produção (com Docker)
+
+Este fluxo de trabalho **não é para o desenvolvimento do dia a dia**. Seu objetivo é simular o ambiente de produção, construindo e rodando a imagem Docker final localmente. É útil para verificar se a "receita" de produção está funcionando antes de o CI/CD a usar.
+
+**Pré-requisitos:**
+* Docker Desktop instalado e em execução.
+* O back-end do projeto precisa estar rodando.
+
+**Passos:**
+
+1.  **Construa a Imagem Docker:**
+    Na raiz do projeto, execute o comando abaixo para construir a imagem, injetando a URL do back-end local.
+    ```bash
+    docker build --build-arg NEXT_PUBLIC_API_URL=http://localhost:3000 -t techchallenge-frontend:local .
+    ```
+2.  **Inicie o Container:**
     ```bash
     docker run -d -p 3001:3001 --name frontend-local techchallenge-frontend:local
     ```
-5.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`**.
+3.  **Acesso:** A aplicação estará disponível em **`http://localhost:3001`**.
+    > **Atenção:** Este modo não possui hot-reload. Qualquer alteração no código exigirá que você reconstrua a imagem.
 
 **Comandos úteis do Docker:**
 * Para parar o container: `docker stop frontend-local`

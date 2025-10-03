@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { getPosts, deletePost, createPost, updatePost, type Post } from '@/services/api'; // ADICIONADO: updatePost
+import { getPosts, deletePost, updatePost, type Post } from '@/services/api'; // ADICIONADO: updatePost
+import { useRouter } from 'next/navigation';
 import Container from '@/components/Container';
 import Header from '@/components/Header';
 import Heading from '@/components/Heading';
@@ -16,6 +17,9 @@ import PostForm, { PostFormData } from '@/components/PostForm';
 import * as S from './page.styles';
 
 export default function AdminPage() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { isAuthenticated, isLoading } = useAuth();
 
   const [allPosts, setAllPosts] = useState<Post[]>([]);
@@ -26,10 +30,6 @@ export default function AdminPage() {
   // Estados para o modal de exclusão
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<Post | null>(null);
-
-  // Estados para o modal de criação
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ADICIONADO: Estados para o modal de edição
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -73,6 +73,10 @@ export default function AdminPage() {
 
   const handleClear = () => setSearchTerm('');
 
+  const handleCreateClick = () => {
+    router.push('/create');
+  };
+
   // Funções para lidar com a exclusão
   const handleDeleteClick = (post: Post) => {
     setPostToDelete(post);
@@ -92,21 +96,6 @@ export default function AdminPage() {
       console.error('Falha ao deletar o post:', error);
       alert('Não foi possível excluir o post.');
       setIsDeleteModalOpen(false);
-    }
-  };
-
-  // Função para lidar com a criação
-  const handleCreateSubmit = async (data: PostFormData) => {
-    setIsSubmitting(true);
-    try {
-      const newPost = await createPost(data);
-      setAllPosts((currentPosts) => [newPost, ...currentPosts]);
-      setIsCreateModalOpen(false);
-    } catch (error) {
-      console.error('Falha ao criar o post:', error);
-      alert('Não foi possível criar o post.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -184,19 +173,23 @@ export default function AdminPage() {
               Gerencie, edite e exclua as postagens do blog.
             </Text>
           </S.Intro>
-          <S.HeaderRow>
-            <SearchForm
-              term={searchTerm}
-              setTerm={setSearchTerm}
-              onSearch={handleSearch}
-              onClear={handleClear}
-              autoSearch
-              debounceMs={300}
-            />
-            <Button onClick={() => setIsCreateModalOpen(true)}>Novo Post</Button>
-          </S.HeaderRow>
+          <S.ActionsRow>
+            <Button variant="primary" onClick={handleCreateClick}>
+              Criar Novo Post
+            </Button>
+            <S.SearchWrapper>
+              <SearchForm
+                term={searchTerm}
+                setTerm={setSearchTerm}
+                onSearch={handleSearch}
+                onClear={handleClear}
+                autoSearch
+                debounceMs={300}
+              />
+            </S.SearchWrapper>
+          </S.ActionsRow>
 
-          <Text size="small">Mostrando {filteredPosts.length} post(s)</Text>
+          
 
           {isLoadingPosts ? (
             <S.SpinnerWrapper>
@@ -205,41 +198,41 @@ export default function AdminPage() {
           ) : (
             <>
               <S.Table>
-                <thead>
+                <S.TableHead>
                   <tr>
-                    <th>Post</th>
-                    <th>Autor</th>
-                    <th>Ações</th>
+                    <th style={{ width: '60%' }}>TÍTULO / RESUMO</th> 
+                    <th style={{ width: '25%' }}>AUTOR</th>
+                    <th style={{ width: '15%', textAlign: 'center' }}>AÇÕES</th>
                   </tr>
-                </thead>
+                </S.TableHead>
                 <tbody>
                   {filteredPosts.map((post) => (
-                    <tr key={post._id}>
-                      <td>
+                    <S.TableRow key={post._id}>
+                      <S.TableCell>
                         <S.PostTitle>{post.title}</S.PostTitle>
-                        <Text size="small">
+                        <S.PostSummary>
                           {post.content.substring(0, 80)}...
-                        </Text>
-                      </td>
-                      <td>{post.author}</td>
-                      <td>
+                        </S.PostSummary>
+                      </S.TableCell>
+                      <S.TableCell>{post.author}</S.TableCell>
+                      <S.TableCell>
                         <S.Actions>
                           {/* ADICIONADO: onClick para o botão Editar */}
                           <Button variant="ghost" onClick={() => handleEditClick(post)}>
                             Editar
                           </Button>
-                          <Button
-                            variant="ghost"
-                            onClick={() => handleDeleteClick(post)}
-                          >
+                          <Button variant="ghost" onClick={() => handleDeleteClick(post)}>
                             Excluir
                           </Button>
                         </S.Actions>
-                      </td>
-                    </tr>
+                      </S.TableCell>
+                    </S.TableRow>
                   ))}
                 </tbody>
               </S.Table>
+              <S.PostCount>
+                Mostrando {filteredPosts.length} post(s)
+              </S.PostCount>
             </>
           )}
         </Container>
@@ -254,17 +247,6 @@ export default function AdminPage() {
           message={`Você tem certeza que deseja excluir o post "${postToDelete.title}"?`}
         />
       )}
-
-      <Modal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        title="Criar Novo Post"
-      >
-        <PostForm
-          onSubmit={handleCreateSubmit}
-          isSubmitting={isSubmitting}
-        />
-      </Modal>
 
       {postToEdit && (
         <Modal

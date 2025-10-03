@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '../Button';
 import Input from '../Input';
 import Textarea from '../Textarea';
+import Link from 'next/link';
 import * as S from './styles';
 
 export type PostFormData = {
@@ -63,9 +64,17 @@ const PostForm = ({
         onChange={(e) => setContent(e.target.value)}
       />
 
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Salvando...' : 'Salvar Post'}
-      </Button>
+     <S.ActionsRow>
+              <Link href="/admin" passHref>
+          <Button variant="ghost">
+              ← Voltar
+          </Button>
+        </Link>
+
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Salvando...' : 'Salvar Post'}
+        </Button>
+      </S.ActionsRow>
     </S.Wrapper>
   );
 };

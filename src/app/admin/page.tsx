@@ -21,7 +21,6 @@ export default function AdminPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
 
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);

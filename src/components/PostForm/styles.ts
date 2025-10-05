@@ -5,9 +5,13 @@ export const Wrapper = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.medium};
+`;
 
-  button {
-    margin-top: ${({ theme }) => theme.spacing.medium};
-    align-self: flex-end; /* Alinha o botão à direita */
-  }
+export const ActionsRow = styled.div`
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%;
+    margin-top: 30px; 
+    padding-bottom: 20px; 
 `;

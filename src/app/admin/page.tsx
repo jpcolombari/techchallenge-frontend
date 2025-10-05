@@ -21,10 +21,11 @@ export default function AdminPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
 
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Estados para o modal de exclusão
@@ -44,7 +45,7 @@ export default function AdminPage() {
           const postData = await getPosts();
           setAllPosts(postData);
         } catch (error) {
-          console.error('Falha ao buscar posts:', error);
+          console.error("Falha ao buscar posts:", error);
         } finally {
           setIsLoadingPosts(false);
         }
@@ -60,9 +61,9 @@ export default function AdminPage() {
     const q = searchTerm.trim().toLowerCase();
     if (!q) return allPosts;
     return allPosts.filter((p) => {
-      const t = p.title?.toLowerCase() ?? '';
-      const c = p.content?.toLowerCase() ?? '';
-      const a = p.author?.toLowerCase() ?? '';
+      const t = p.title?.toLowerCase() ?? "";
+      const c = p.content?.toLowerCase() ?? "";
+      const a = p.author?.toLowerCase() ?? "";
       return t.includes(q) || c.includes(q) || a.includes(q);
     });
   }, [allPosts, searchTerm]);
@@ -88,13 +89,13 @@ export default function AdminPage() {
     try {
       await deletePost(postToDelete._id);
       setAllPosts((currentPosts) =>
-        currentPosts.filter((p) => p._id !== postToDelete._id),
+        currentPosts.filter((p) => p._id !== postToDelete._id)
       );
       setIsDeleteModalOpen(false);
       setPostToDelete(null);
     } catch (error) {
-      console.error('Falha ao deletar o post:', error);
-      alert('Não foi possível excluir o post.');
+      console.error("Falha ao deletar o post:", error);
+      alert("Não foi possível excluir o post.");
       setIsDeleteModalOpen(false);
     }
   };
@@ -111,13 +112,13 @@ export default function AdminPage() {
     try {
       const updatedPost = await updatePost(postToEdit._id, data);
       setAllPosts((currentPosts) =>
-        currentPosts.map((p) => (p._id === updatedPost._id ? updatedPost : p)),
+        currentPosts.map((p) => (p._id === updatedPost._id ? updatedPost : p))
       );
       setIsEditModalOpen(false);
       setPostToEdit(null);
     } catch (error) {
-      console.error('Falha ao atualizar o post:', error);
-      alert('Não foi possível atualizar o post.');
+      console.error("Falha ao atualizar o post:", error);
+      alert("Não foi possível atualizar o post.");
     } finally {
       setIsSubmitting(false);
     }
@@ -237,7 +238,7 @@ export default function AdminPage() {
           )}
         </Container>
       </main>
-      
+
       {postToDelete && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}

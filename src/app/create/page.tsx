@@ -2,13 +2,13 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation'; 
-import { createPost, PostFormData } from '@/services/api'; 
+import { createPost } from '@/services/api';
 import Link from 'next/link';
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
-import PostForm from '@/components/PostForm'; 
+import PostForm, { PostFormData } from '@/components/PostForm'; 
 import LoginModal from '@/components/LoginModal';
 import Text from '@/components/Text'; 
 import Spinner from '@/components/Spinner';
@@ -70,7 +70,7 @@ export default function CreatePostPage() {
       <S.MainContent> 
         <Container> 
           <S.TitleWrapper>
-            <Heading level={1}>
+            <Heading>
               Criar Novo Post
             </Heading>
           </S.TitleWrapper>

@@ -1,19 +1,18 @@
-'use client';
-import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { createPost } from '@/services/api';
-import PostForm, { type PostFormData } from '@/components/PostForm';
-
-import Container from '@/components/Container';
-import Heading from '@/components/Heading';
-import Header from '@/components/Header';
-import Button from '@/components/Button';
-import LoginModal from '@/components/LoginModal';
-import Text from '@/components/Text';
-import Spinner from '@/components/Spinner';
-import Modal from '@/components/Modal';
-import * as S from './page.styles';
+"use client";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { createPost } from "@/services/api";
+import PostForm, { type PostFormData } from "@/components/PostForm";
+import Container from "@/components/Container";
+import Heading from "@/components/Heading";
+import Header from "@/components/Header";
+import Button from "@/components/Button";
+import LoginModal from "@/components/LoginModal";
+import Text from "@/components/Text";
+import Spinner from "@/components/Spinner";
+import Modal from "@/components/Modal";
+import * as S from "./page.styles";
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -22,16 +21,28 @@ export default function CreatePostPage() {
   const { isAuthenticated, isLoading } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const [modalInfo, setModalInfo] = useState<{ title: string; message: string; isError: boolean } | null>(null);
+  const [modalInfo, setModalInfo] = useState<{
+    title: string;
+    message: string;
+    isError: boolean;
+  } | null>(null);
 
   const handleCreateSubmit = async (data: PostFormData) => {
     setIsSubmitting(true);
     try {
       await createPost(data);
-      setModalInfo({ title: 'Sucesso', message: 'Post criado com sucesso!', isError: false });
+      setModalInfo({
+        title: "Sucesso",
+        message: "Post criado com sucesso!",
+        isError: false,
+      });
     } catch (error) {
-      console.error('Falha ao criar o post:', error);
-      setModalInfo({ title: 'Erro', message: 'Não foi possível criar o post.', isError: true });
+      console.error("Falha ao criar o post:", error);
+      setModalInfo({
+        title: "Erro",
+        message: "Não foi possível criar o post.",
+        isError: true,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -39,7 +50,7 @@ export default function CreatePostPage() {
 
   const handleCloseModal = () => {
     if (modalInfo && !modalInfo.isError) {
-      router.push('/');
+      router.push("/");
     }
     setModalInfo(null);
   };
@@ -86,21 +97,14 @@ export default function CreatePostPage() {
   return (
     <>
       <Header />
-      <S.MainContent>
-        <Container>
-          <S.TitleWrapper>
-            <Heading>
-              Criar Novo Post
-            </Heading>
-          </S.TitleWrapper>
+      <Container>
+        <S.TitleWrapper>
+          <Heading>Criar Nova Postagem</Heading>
+          <Text size="medium">Preencha os campos e clique em salvar.</Text>
+        </S.TitleWrapper>
 
-          <PostForm
-            onSubmit={handleCreateSubmit}
-            isSubmitting={isSubmitting}
-          />
-
-        </Container>
-      </S.MainContent>
+        <PostForm onSubmit={handleCreateSubmit} isSubmitting={isSubmitting} />
+      </Container>
       {modalInfo && (
         <Modal
           isOpen={!!modalInfo}
@@ -108,10 +112,8 @@ export default function CreatePostPage() {
           title={modalInfo.title}
         >
           <Text>{modalInfo.message}</Text>
-          <div style={{ textAlign: 'right', marginTop: '20px' }}>
-            <Button onClick={handleCloseModal}>
-              OK
-            </Button>
+          <div style={{ textAlign: "right", marginTop: "20px" }}>
+            <Button onClick={handleCloseModal}>OK</Button>
           </div>
         </Modal>
       )}

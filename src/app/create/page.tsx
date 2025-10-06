@@ -1,41 +1,61 @@
 'use client';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import { createPost } from '@/services/api';
-import Link from 'next/link';
+import PostForm, { type PostFormData } from '@/components/PostForm';
+
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
-import PostForm, { PostFormData } from '@/components/PostForm'; 
 import LoginModal from '@/components/LoginModal';
-import Text from '@/components/Text'; 
+import Text from '@/components/Text';
 import Spinner from '@/components/Spinner';
-import * as S from './page.styles'; 
+import Modal from '@/components/Modal';
+import * as S from './page.styles';
 
 export default function CreatePostPage() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { isAuthenticated, isLoading } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+  const [modalInfo, setModalInfo] = useState<{ title: string; message: string; isError: boolean } | null>(null);
+
   const handleCreateSubmit = async (data: PostFormData) => {
     setIsSubmitting(true);
     try {
       await createPost(data);
-      
-      alert('Post criado com sucesso!');
-      router.push('/'); 
-      
+      setModalInfo({ title: 'Sucesso', message: 'Post criado com sucesso!', isError: false });
     } catch (error) {
       console.error('Falha ao criar o post:', error);
-      alert('Não foi possível criar o post.');
+      setModalInfo({ title: 'Erro', message: 'Não foi possível criar o post.', isError: true });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleCloseModal = () => {
+    if (modalInfo && !modalInfo.isError) {
+      router.push('/');
+    }
+    setModalInfo(null);
+  };
+
+  if (isLoading) {
+    return (
+      <main>
+        <Header />
+        <Container>
+          <S.SpinnerWrapper>
+            <Spinner />
+          </S.SpinnerWrapper>
+        </Container>
+      </main>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -64,24 +84,37 @@ export default function CreatePostPage() {
   }
 
   return (
-    <> 
+    <>
       <Header />
-
-      <S.MainContent> 
-        <Container> 
+      <S.MainContent>
+        <Container>
           <S.TitleWrapper>
             <Heading>
               Criar Novo Post
             </Heading>
           </S.TitleWrapper>
-          
-          <PostForm 
+
+          <PostForm
             onSubmit={handleCreateSubmit}
             isSubmitting={isSubmitting}
           />
 
         </Container>
       </S.MainContent>
+      {modalInfo && (
+        <Modal
+          isOpen={!!modalInfo}
+          onClose={handleCloseModal}
+          title={modalInfo.title}
+        >
+          <Text>{modalInfo.message}</Text>
+          <div style={{ textAlign: 'right', marginTop: '20px' }}>
+            <Button onClick={handleCloseModal}>
+              OK
+            </Button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 }

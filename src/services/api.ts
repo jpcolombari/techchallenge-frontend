@@ -21,10 +21,8 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-// O Interceptor Mágico
 api.interceptors.request.use(
   (config) => {
-    // Só tente acessar o localStorage se o 'window' (objeto do navegador) existir
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("authToken");
       if (token) {
@@ -34,6 +32,22 @@ api.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authUser");
+
+        alert("Sua sessão expirou. Por favor, faça login novamente.");
+        window.location.href = "/";
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 // Funções Públicas

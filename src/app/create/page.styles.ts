@@ -11,15 +11,22 @@ export const LoginButtonWrapper = styled.div`
 `;
 
 export const FooterActions = styled.div`
-    display: flex;
-    justify-content: flex-start; 
-    padding-bottom: 20px; 
+  display: flex;
+  justify-content: flex-start;
+  padding-bottom: 20px;
 `;
 
 export const TitleWrapper = styled.div`
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 `;
 
 export const MainContent = styled.main`
-    margin-top: 40px; 
+  margin-top: 40px;
+`;
+
+export const SpinnerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
 `;

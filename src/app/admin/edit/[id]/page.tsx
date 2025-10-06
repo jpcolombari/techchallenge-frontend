@@ -8,8 +8,12 @@ import Heading from "@/components/Heading";
 import Text from "@/components/Text";
 import Spinner from "@/components/Spinner";
 import Button from "@/components/Button";
-import PostForm, { PostFormData } from "@/components/PostForm";
-import { getPostById, updatePost, type Post } from "@/services/api"; // crie getPostById
+import PostForm, { type PostFormData } from "@/components/PostForm";
+import { getPostById, updatePost, type Post } from "@/services/api";
+
+import { useAuth } from "@/contexts/AuthContext";
+import Modal from "@/components/Modal";
+
 import * as S from "./page.styles";
 
 export default function EditPostPage() {
@@ -21,7 +25,16 @@ export default function EditPostPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const [modalInfo, setModalInfo] = useState<{ title: string; message: string; isError: boolean } | null>(null);
+
   useEffect(() => {
+    if (isAuthLoading) return;
+    if (!isAuthenticated) {
+      router.push("/");
+      return;
+    }
+
     if (!id) return;
     const fetchPost = async () => {
       try {
@@ -30,37 +43,41 @@ export default function EditPostPage() {
         setPost(p);
       } catch (error) {
         console.error("Erro ao carregar post:", error);
-        alert("Não foi possível carregar o post.");
+        setModalInfo({ title: 'Erro ao Carregar', message: 'Não foi possível carregar o post. Você será redirecionado.', isError: true });
       } finally {
         setIsLoading(false);
       }
     };
     fetchPost();
-  }, [id]);
+  }, [id, isAuthenticated, isAuthLoading, router]);
 
   const handleUpdateSubmit = async (data: PostFormData) => {
     if (!id) return;
     setIsSubmitting(true);
     try {
       await updatePost(id, data);
-      alert("Post atualizado com sucesso!");
-      router.push("/admin"); // volta
+      setModalInfo({ title: 'Sucesso!', message: 'Post atualizado com sucesso.', isError: false });
     } catch (error) {
       console.error("Erro ao atualizar post:", error);
-      alert("Não foi possível atualizar o post.");
+      setModalInfo({ title: 'Erro', message: 'Não foi possível atualizar o post.', isError: true });
     } finally {
       setIsSubmitting(false);
     }
   };
+  
+  const handleCloseModal = () => {
+    if (modalInfo && !modalInfo.isError || (modalInfo?.isError && modalInfo?.title === 'Erro ao Carregar')) {
+      router.push('/admin');
+    }
+    setModalInfo(null);
+  };
 
-  if (isLoading) {
+  if (isLoading || isAuthLoading) {
     return (
       <main>
         <Header />
         <Container>
-          <S.SpinnerWrapper>
-            <Spinner />
-          </S.SpinnerWrapper>
+          <S.SpinnerWrapper><Spinner /></S.SpinnerWrapper>
         </Container>
       </main>
     );
@@ -79,26 +96,37 @@ export default function EditPostPage() {
   }
 
   return (
-    <main>
-      <Header />
-      <Container>
-        <S.Intro>
-          <Heading>Editar Postagem</Heading>
-          <Text size="medium">Edite os campos e clique em salvar.</Text>
-        </S.Intro>
+    <>
+      <main>
+        <Header />
+        <Container>
+          <S.Intro>
+            <Heading>Editar Postagem</Heading>
+            <Text size="medium">Edite os campos e clique em salvar.</Text>
+          </S.Intro>
 
-        <PostForm
-          initialData={post}
-          onSubmit={handleUpdateSubmit}
-          isSubmitting={isSubmitting}
-        />
+          <PostForm
+            initialData={post}
+            onSubmit={handleUpdateSubmit}
+            isSubmitting={isSubmitting}
+          />
+        </Container>
+      </main>
 
-        <S.Actions>
-          <Button variant="secondary" onClick={() => router.push("/admin")}>
-            Cancelar
-          </Button>
-        </S.Actions>
-      </Container>
-    </main>
+      {modalInfo && (
+        <Modal
+          isOpen={!!modalInfo}
+          onClose={handleCloseModal}
+          title={modalInfo.title}
+        >
+          <Text>{modalInfo.message}</Text>
+          <div style={{ textAlign: 'right', marginTop: '20px' }}>
+            <Button onClick={handleCloseModal}>
+              OK
+            </Button>
+          </div>
+        </Modal>
+      )}
+    </>
   );
 }

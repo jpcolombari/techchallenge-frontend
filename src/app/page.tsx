@@ -60,14 +60,17 @@ export default function Home() {
           <Heading>Bem-vindo ao Blog!</Heading>
         </S.Intro>
 
-        <SearchForm
-          term={searchTerm}
-          setTerm={setSearchTerm}
-          onSearch={handleSearch}
-          onClear={handleClearSearch}
-          autoSearch
-          debounceMs={300}
-        />
+
+        <S.SearchContainer>
+          <SearchForm
+            term={searchTerm}
+            setTerm={setSearchTerm}
+            onSearch={handleSearch}
+            onClear={handleClearSearch}
+            autoSearch
+            debounceMs={300}
+          />
+        </S.SearchContainer>
 
         {isLoading ? (
           <S.SpinnerWrapper>

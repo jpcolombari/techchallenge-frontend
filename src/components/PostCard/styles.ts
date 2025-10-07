@@ -10,6 +10,7 @@ export const Wrapper = styled.article`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.default};
   transition: box-shadow ${({ theme }) => theme.transitions.default};
+  background: ${({ theme }) => theme.colors.background};
 
   &:hover {
     box-shadow: ${({ theme }) => theme.shadows.default};

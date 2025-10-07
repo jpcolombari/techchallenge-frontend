@@ -8,7 +8,7 @@ const GlobalStyles = createGlobalStyle`
     padding: 0; 
   }
   body { 
-    background: ${theme.colors.background}; 
+    background: ${theme.colors.bodyBackground}; 
     color: ${theme.colors.text}; 
     font-family: ${theme.fonts.main}; 
   }

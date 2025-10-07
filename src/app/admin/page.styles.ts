@@ -34,7 +34,6 @@ export const ActionsRow = styled.div`
     xs: css`
       flex-direction: column-reverse;
       align-items: stretch;
-      gap: 15px;
     `,
     md: css`
       flex-direction: row;
@@ -49,7 +48,7 @@ export const SearchWrapper = styled.div`
       width: 100%;
     `,
     md: css`
-      width: 250px;
+      width: 320px;
     `,
   })}
 `;

@@ -3,7 +3,7 @@ import * as S from './styles';
 export type TextProps = {
   children: React.ReactNode;
   as?: 'p' | 'span' | 'div';
-  size?: 'small' | 'medium';
+  size?: 'small' | 'medium' | 'large';
 };
 
 const Text = ({ children, as = 'p', size = 'medium' }: TextProps) => {

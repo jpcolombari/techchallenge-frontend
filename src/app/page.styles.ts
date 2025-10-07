@@ -1,5 +1,6 @@
 'use client';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import breakpointsMedia from '@/utils/breakpointsMedia';
 
 export const Intro = styled.section`
   text-align: center;
@@ -11,6 +12,7 @@ export const PostsGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: ${({ theme }) => theme.spacing.large};
   padding-bottom: ${({ theme }) => theme.spacing.xxlarge};
+  margin-top: ${({ theme }) => theme.spacing.large};
 `;
 
 export const PostLink = styled.a`
@@ -27,3 +29,14 @@ export const SpinnerWrapper = styled.div`
   justify-content: center;
   padding: ${({ theme }) => theme.spacing.xxlarge} 0;
 `;
+
+export const SearchContainer = styled.div`
+  ${breakpointsMedia({
+    xs: css`
+      width: 100%;
+    `,
+    md: css`
+      width: 32%;
+    `,
+  })}
+`

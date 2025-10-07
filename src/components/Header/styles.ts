@@ -1,7 +1,8 @@
 'use client';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import breakpointsMedia from '@/utils/breakpointsMedia';
 
-// ... Wrapper, Content, Title, Nav (sem alterações) ...
+
 export const Wrapper = styled.header`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.secondary};
@@ -13,6 +14,14 @@ export const Content = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  ${breakpointsMedia({
+    xs: css`
+      flex-direction: column;
+    `,
+    md: css`
+      flex-direction: row;
+    `,
+  })}
 `;
 
 export const Title = styled.h1`
@@ -21,7 +30,16 @@ export const Title = styled.h1`
   cursor: pointer;
 `;
 
-export const Nav = styled.nav``;
+export const Nav = styled.nav`
+${breakpointsMedia({
+    xs: css`
+      margin-top: ${({ theme }) => theme.spacing.small};
+    `,
+    md: css`
+      margin-top: 0;
+    `,
+  })}
+`;
 
 export const UserInfo = styled.div`
   display: flex;

@@ -12,6 +12,9 @@ const wrapperModifiers = {
   medium: (theme: DefaultTheme) => css`
     font-size: ${theme.fontSizes.medium};
   `,
+  large: (theme: DefaultTheme) => css`
+    font-size: ${theme.fontSizes.large};
+  `, 
 };
 
 export const Wrapper = styled.p<WrapperProps>`

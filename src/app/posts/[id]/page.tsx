@@ -43,10 +43,18 @@ export default async function PostPage({ params }: PostPageProps) {
       <Header />
       <Container>
         <S.Wrapper>
-            <BackButton />
-            <Heading>{post.title}</Heading>
+          <BackButton />
+          <S.PostHeader>
+            <S.Title>{post.title}</S.Title>
             <S.Author>Por {post.author}</S.Author>
+          </S.PostHeader>
+          <S.CoverImage
+            src="/images/banner.jpeg"
+            alt={`Imagem de capa do post: ${post.title}`}
+          />
+          <S.TextCard>
             <S.Content>{post.content}</S.Content>
+          </S.TextCard>
         </S.Wrapper>
       </Container>
     </main>

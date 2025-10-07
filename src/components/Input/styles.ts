@@ -11,6 +11,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xsmall};
+  flex-basis: 100%;
 `;
 
 export const Label = styled.label`

@@ -9,6 +9,11 @@ export type Post = {
   author: string;
   createdAt: string;
   updatedAt: string;
+  quiz?: {
+    question: string;
+    answer: boolean;
+    explanation: string;
+  };
 };
 
 export type PaginatedPostResponse = {
@@ -93,5 +98,9 @@ export const updatePost = async (
 
 export const deletePost = async (id: string) =>
   api.delete(`/posts/${id}`).then((res) => res.data);
+
+// Função para Gerar Pergunta (IA)
+export const generateQuiz = async (content: string): Promise<{ question: string; answer: boolean; explanation: string }> =>
+  api.post("/posts/generate-quiz", { content }).then((res) => res.data);
 
 export default api;

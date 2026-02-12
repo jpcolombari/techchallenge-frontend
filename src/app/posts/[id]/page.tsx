@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Heading from '@/components/Heading';
 import Text from '@/components/Text';
 import { getPostById, Post } from '@/services/api';
+import QuizSection from '@/components/QuizSection';
 import * as S from './page.styles';
 
 type PostPageProps = {
@@ -54,6 +55,13 @@ export default async function PostPage({ params }: PostPageProps) {
           />
           <S.TextCard>
             <S.Content>{post.content}</S.Content>
+            {post.quiz && (
+              <QuizSection
+                question={post.quiz.question}
+                answer={post.quiz.answer}
+                explanation={post.quiz.explanation}
+              />
+            )}
           </S.TextCard>
         </S.Wrapper>
       </Container>

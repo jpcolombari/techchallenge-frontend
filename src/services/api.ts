@@ -10,11 +10,26 @@ export type Post = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type PaginatedPostResponse = {
+  data: Post[];
+  total: number;
+  page: number;
+  lastPage: number;
+};
+
 export type LoginResponse = { access_token: string };
+
+export enum UserRole {
+  PROFESSOR = 'PROFESSOR',
+  STUDENT = 'STUDENT',
+}
+
 export type CreateUserPayload = {
   name: string;
   email: string;
   password: string;
+  role: UserRole;
 };
 
 const api = axios.create({
@@ -42,8 +57,9 @@ api.interceptors.response.use(
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
 
-        alert("Sua sessão expirou. Por favor, faça login novamente.");
-        window.location.href = "/";
+        // Evitar loop de redirect se já estivermos na home ou login
+        // alert("Sua sessão expirou. Por favor, faça login novamente.");
+        // window.location.href = "/";
       }
     }
     return Promise.reject(error);
@@ -51,8 +67,8 @@ api.interceptors.response.use(
 );
 
 // Funções Públicas
-export const getPosts = async (): Promise<Post[]> =>
-  api.get("/posts").then((res) => res.data);
+export const getPosts = async (page = 1, limit = 10): Promise<PaginatedPostResponse> =>
+  api.get(`/posts?page=${page}&limit=${limit}`).then((res) => res.data);
 
 export const getPostById = async (id: string): Promise<Post> =>
   api.get(`/posts/${id}`).then((res) => res.data);

@@ -10,29 +10,41 @@ import * as S from './page.styles';
 import SearchForm from '@/components/SearchForm';
 import Spinner from '@/components/Spinner';
 import Text from '@/components/Text';
+import Button from '@/components/Button';
 
 export default function Home() {
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [searchTerm, setSearchTerm] = useState('');
 
+  const fetchPosts = async (pageNumber: number) => {
+    setIsLoading(true);
+    try {
+      const response = await getPosts(pageNumber);
+      setAllPosts(response.data);
+      setTotalPages(response.lastPage);
+    } catch (error) {
+      console.error('Falha ao buscar posts:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true);
-      try {
-        const postData = await getPosts();
-        setAllPosts(postData);
-      } catch (error) {
-        console.error('Falha ao buscar posts:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPosts();
-  }, []);
+    fetchPosts(page);
+  }, [page]);
 
   // Filtro local (título, conteúdo e autor)
+  // Obs: Com paginação no backend, o ideal seria filtrar no backend via API de busca.
+  // Mas mantendo o comportamento híbrido (busca local na página atual) ou ajustando para busca global se desejado.
+  // Neste passo, vou manter o filtro local na página atual para simplificar, 
+  // mas o correto seria o componente SearchForm disparar uma busca na API se o termo não for vazio.
+  // Como `searchPosts` já existe, vou integrar melhor depois se precisar.
+  // Por enquanto, filtro o que veio da página atual.
+
   const filteredPosts = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
     if (!q) return allPosts;
@@ -45,11 +57,20 @@ export default function Home() {
   }, [allPosts, searchTerm]);
 
   const handleSearch = () => {
-    // No filtro local, não precisamos fazer nada aqui.
+    // Se quiser busca global, precisaria chamar searchPosts(searchTerm)
+    // Mas o fluxo atual sugeria filtro local.
   };
 
   const handleClearSearch = () => {
     setSearchTerm('');
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages) setPage(page + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) setPage(page - 1);
   };
 
   return (
@@ -78,27 +99,47 @@ export default function Home() {
           </S.SpinnerWrapper>
         ) : (
           <>
-            <Text size="small">Mostrando {filteredPosts.length} post(s)</Text>
+            <Text size="small">Mostrando {filteredPosts.length} post(s) na página {page}</Text>
 
             <S.PostsGrid>
               {filteredPosts.length === 0 && !!searchTerm && (
-                <p>Nenhum resultado encontrado para “{searchTerm}”.</p>
+                <p>Nenhum resultado encontrado para “{searchTerm}” nesta página.</p>
               )}
 
               {filteredPosts.map((post) => (
-  <Link
-    key={post._id}
-    href={`/posts/${post._id}`}
-    style={{ textDecoration: 'none', color: 'inherit', height: '100%' }}
-  >
-    <PostCard
-      title={post.title}
-      author={post.author}
-      summary={post.content.substring(0, 150) + '...'}
-    />
-  </Link>
-))}
+                <Link
+                  key={post._id}
+                  href={`/posts/${post._id}`}
+                  style={{ textDecoration: 'none', color: 'inherit', height: '100%' }}
+                >
+                  <PostCard
+                    title={post.title}
+                    author={post.author}
+                    summary={post.content.substring(0, 150) + '...'}
+                  />
+                </Link>
+              ))}
             </S.PostsGrid>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
+              <Button
+                onClick={handlePrevPage}
+                disabled={page === 1}
+                variant="secondary"
+              >
+                Anterior
+              </Button>
+              <span style={{ alignSelf: 'center', fontSize: '1.2rem' }}>
+                Página {page} de {totalPages}
+              </span>
+              <Button
+                onClick={handleNextPage}
+                disabled={page === totalPages}
+                variant="secondary"
+              >
+                Próxima
+              </Button>
+            </div>
           </>
         )}
       </Container>

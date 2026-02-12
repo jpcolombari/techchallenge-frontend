@@ -28,25 +28,29 @@ export default function AdminPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<Post | null>(null);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   // Carrega todos os posts ao entrar autenticado
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      const fetchPosts = async () => {
+      const fetchPosts = async (pageNumber: number) => {
         setIsLoadingPosts(true);
         try {
-          const postData = await getPosts();
-          setAllPosts(postData);
+          const response = await getPosts(pageNumber, 10);
+          setAllPosts(response.data);
+          setTotalPages(response.lastPage);
         } catch (error) {
           console.error("Falha ao buscar posts:", error);
         } finally {
           setIsLoadingPosts(false);
         }
       };
-      fetchPosts();
+      fetchPosts(page);
     } else if (!isLoading && !isAuthenticated) {
       setIsLoadingPosts(false);
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, page]);
 
   // Filtro local
   const filteredPosts = useMemo(() => {
@@ -140,14 +144,14 @@ export default function AdminPage() {
               <SearchForm
                 term={searchTerm}
                 setTerm={setSearchTerm}
-                onSearch={() => {}}
+                onSearch={() => { }}
                 onClear={() => setSearchTerm('')}
                 autoSearch
                 debounceMs={300}
               />
             </S.SearchWrapper>
           </S.ActionsRow>
-          
+
           {isLoadingPosts ? (
             <S.SpinnerWrapper>
               <Spinner />
@@ -183,8 +187,27 @@ export default function AdminPage() {
                   </S.PostListItem>
                 ))}
               </S.PostList>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
+                <Button
+                  onClick={() => page > 1 && setPage(page - 1)}
+                  disabled={page === 1}
+                  variant="secondary"
+                >
+                  Anterior
+                </Button>
+                <span style={{ alignSelf: 'center', fontSize: '1.2rem' }}>
+                  Página {page} de {totalPages}
+                </span>
+                <Button
+                  onClick={() => page < totalPages && setPage(page + 1)}
+                  disabled={page === totalPages}
+                  variant="secondary"
+                >
+                  Próxima
+                </Button>
+              </div>
               <S.PostCount>
-                Mostrando {filteredPosts.length} post(s)
+                Mostrando {filteredPosts.length} post(s) na página {page}
               </S.PostCount>
             </>
           )}

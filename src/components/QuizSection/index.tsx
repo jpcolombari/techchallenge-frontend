@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "../Button";
 
 type QuizSectionProps = {
@@ -13,26 +13,14 @@ const QuizSection = ({ question, answer, explanation }: QuizSectionProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  // Recupera estado salvo ao carregar
-  useEffect(() => {
-    const savedAnswer = localStorage.getItem(`quiz-${question}-answer`);
-    if (savedAnswer !== null) {
-      const userChoice = savedAnswer === "true";
-      setSelectedAnswer(userChoice);
-      setIsCorrect(userChoice === answer);
-    }
-  }, [question, answer]);
-
   const handleAnswer = (userChoice: boolean) => {
     setSelectedAnswer(userChoice);
     setIsCorrect(userChoice === answer);
-    localStorage.setItem(`quiz-${question}-answer`, String(userChoice));
   };
 
   const handleReset = () => {
     setSelectedAnswer(null);
     setIsCorrect(null);
-    localStorage.removeItem(`quiz-${question}-answer`);
   };
 
   if (!question) return null;

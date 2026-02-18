@@ -9,8 +9,13 @@ import Heading from '@/components/Heading';
 import * as S from './page.styles';
 import SearchForm from '@/components/SearchForm';
 import Spinner from '@/components/Spinner';
-import Text from '@/components/Text';
-import Button from '@/components/Button';
+import Pagination from '@/components/Pagination';
+
+// Função auxiliar para data fake (caso backend não retorne ou para simular posts antigos)
+const getRandomDate = () => {
+  const dates = ['17 Fev, 2026', '16 Fev, 2026', '15 Fev, 2026', '10 Fev, 2026'];
+  return dates[Math.floor(Math.random() * dates.length)];
+};
 
 export default function Home() {
   const [allPosts, setAllPosts] = useState<Post[]>([]);
@@ -37,14 +42,6 @@ export default function Home() {
     fetchPosts(page);
   }, [page]);
 
-  // Filtro local (título, conteúdo e autor)
-  // Obs: Com paginação no backend, o ideal seria filtrar no backend via API de busca.
-  // Mas mantendo o comportamento híbrido (busca local na página atual) ou ajustando para busca global se desejado.
-  // Neste passo, vou manter o filtro local na página atual para simplificar, 
-  // mas o correto seria o componente SearchForm disparar uma busca na API se o termo não for vazio.
-  // Como `searchPosts` já existe, vou integrar melhor depois se precisar.
-  // Por enquanto, filtro o que veio da página atual.
-
   const filteredPosts = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
     if (!q) return allPosts;
@@ -57,20 +54,11 @@ export default function Home() {
   }, [allPosts, searchTerm]);
 
   const handleSearch = () => {
-    // Se quiser busca global, precisaria chamar searchPosts(searchTerm)
-    // Mas o fluxo atual sugeria filtro local.
+    // Busca local mantida
   };
 
   const handleClearSearch = () => {
     setSearchTerm('');
-  };
-
-  const handleNextPage = () => {
-    if (page < totalPages) setPage(page + 1);
-  };
-
-  const handlePrevPage = () => {
-    if (page > 1) setPage(page - 1);
   };
 
   return (
@@ -78,9 +66,12 @@ export default function Home() {
       <Header />
       <Container>
         <S.Intro>
-          <Heading>Bem-vindo ao Blog!</Heading>
+          <Heading as="h1">Tech Challenge Blog</Heading>
+          <p>
+            Explore artigos sobre desenvolvimento, arquitetura de software e tecnologia.
+            Conteúdo curado para impulsionar sua carreira tech.
+          </p>
         </S.Intro>
-
 
         <S.SearchContainer>
           <SearchForm
@@ -99,47 +90,38 @@ export default function Home() {
           </S.SpinnerWrapper>
         ) : (
           <>
-            <Text size="small">Mostrando {filteredPosts.length} post(s) na página {page}</Text>
-
             <S.PostsGrid>
               {filteredPosts.length === 0 && !!searchTerm && (
                 <p>Nenhum resultado encontrado para “{searchTerm}” nesta página.</p>
               )}
 
-              {filteredPosts.map((post) => (
-                <Link
-                  key={post._id}
-                  href={`/posts/${post._id}`}
-                  style={{ textDecoration: 'none', color: 'inherit', height: '100%' }}
-                >
-                  <PostCard
-                    title={post.title}
-                    author={post.author}
-                    summary={post.content.substring(0, 150) + '...'}
-                  />
-                </Link>
-              ))}
+              {filteredPosts.map((post) => {
+                const summary = post.content.substring(0, 180) + (post.content.length > 180 ? '...' : '');
+
+                return (
+                  <Link
+                    key={post._id}
+                    href={`/posts/${post._id}`}
+                    style={{ textDecoration: 'none', color: 'inherit', height: '100%' }}
+                  >
+                    <PostCard
+                      title={post.title}
+                      author={post.author}
+                      summary={summary}
+                      date={post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-BR') : getRandomDate()}
+                    />
+                  </Link>
+                );
+              })}
             </S.PostsGrid>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
-              <Button
-                onClick={handlePrevPage}
-                disabled={page === 1}
-                variant="secondary"
-              >
-                Anterior
-              </Button>
-              <span style={{ alignSelf: 'center', fontSize: '1.2rem' }}>
-                Página {page} de {totalPages}
-              </span>
-              <Button
-                onClick={handleNextPage}
-                disabled={page === totalPages}
-                variant="secondary"
-              >
-                Próxima
-              </Button>
-            </div>
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            )}
           </>
         )}
       </Container>

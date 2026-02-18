@@ -1,15 +1,15 @@
 import * as S from './styles';
-import { ButtonHTMLAttributes } from 'react'; 
+import { ButtonHTMLAttributes } from 'react';
 
 export type ButtonProps = {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button = ({
   children,
   variant = 'primary',
-  ...rest 
+  ...rest
 }: ButtonProps) => {
   return (
     <S.Wrapper $variant={variant} {...rest}>

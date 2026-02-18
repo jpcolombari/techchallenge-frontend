@@ -26,6 +26,20 @@ export const Author = styled(Text)`
   font-style: italic;
 `;
 
+export const MetaInfo = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.small};
+  font-size: ${({ theme }) => theme.fontSizes.small};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin-top: ${({ theme }) => theme.spacing.small};
+  align-items: center;
+  
+  span, time {
+    display: inline-flex;
+    align-items: center;
+  }
+`;
+
 export const CoverImage = styled.img`
   width: 100%;
   height: auto;

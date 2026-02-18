@@ -8,179 +8,190 @@ export const SpinnerWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: ${({ theme }) => theme.spacing.xxlarge} 0;
+  min-height: 50vh;
 `;
 
 export const AuthRequiredWrapper = styled.div`
   text-align: center;
   padding: ${({ theme }) => theme.spacing.xxlarge} 0;
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 export const LoginButtonWrapper = styled.div`
   margin-top: ${({ theme }) => theme.spacing.large};
+  display: flex;
+  justify-content: center;
 `;
 
 export const Intro = styled.div`
-  padding: 40px 0;
-  text-align: center;
-  margin-bottom: 20px;
+  padding: ${({ theme }) => theme.spacing.xlarge} 0;
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 export const ActionsRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+  gap: ${({ theme }) => theme.spacing.medium};
+  
   ${breakpointsMedia({
-    xs: css`
+  xs: css`
       flex-direction: column-reverse;
       align-items: stretch;
     `,
-    md: css`
+  md: css`
       flex-direction: row;
       align-items: center;
     `,
-  })}
+})}
 `;
 
 export const SearchWrapper = styled.div`
-  ${breakpointsMedia({
-    xs: css`
-      width: 100%;
-    `,
-    md: css`
-      width: 320px;
-    `,
-  })}
+  flex: 1;
+  max-width: 400px;
 `;
 
-export const LinkAsButton = styled(ButtonWrapper).attrs({ as: 'a' })``;
+export const LinkAsButton = styled(ButtonWrapper).attrs({ as: 'a' })`
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const PostList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.medium};
 `;
 
 export const ListHeader = styled.div`
   display: flex;
-  padding: 10px 15px;
+  padding: ${({ theme }) => theme.spacing.medium};
   font-weight: 600;
-  color: #333;
+  color: ${({ theme }) => theme.colors.textSecondary};
   text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
+  font-size: ${({ theme }) => theme.fontSizes.xsmall};
+  letter-spacing: 0.05em;
+  background-color: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  margin-bottom: ${({ theme }) => theme.spacing.small};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   ${breakpointsMedia({
-    xs: css`
-      display: none; // Esconde o cabeçalho em telas pequenas
+  xs: css`
+      display: none; 
     `,
-    md: css`
+  md: css`
       display: flex;
     `,
-  })}
+})}
 `;
 
 export const HeaderLabel = styled.span``;
 
 export const PostListItem = styled.li`
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background-color: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.default};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   transition: all 0.2s ease-in-out;
-  padding: 15px;
+  padding: ${({ theme }) => theme.spacing.medium};
   display: flex;
   align-items: center;
 
-  & + & {
-    margin-top: 10px; // Espaço entre os itens da lista
-  }
-
   &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: ${({ theme }) => theme.shadows.md};
+    border-color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-2px);
   }
 
   ${breakpointsMedia({
-    xs: css`
-      flex-direction: column; // Empilha os itens verticalmente no mobile
+  xs: css`
+      flex-direction: column; 
       align-items: flex-start;
-      gap: 10px; // Espaço entre os blocos empilhados
+      gap: ${({ theme }) => theme.spacing.medium};
     `,
-    md: css`
-      flex-direction: row; // Alinha em linha em telas maiores
+  md: css`
+      flex-direction: row; 
       align-items: center;
-      gap: 15px;
+      gap: ${({ theme }) => theme.spacing.large};
     `,
-  })}
+})}
 `;
 
 export const PostContent = styled.div`
-  flex: 1; // Ocupa o máximo de espaço possível
+  flex: 1; 
 `;
 
 export const PostTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-  color: #000;
+  font-size: ${({ theme }) => theme.fontSizes.medium};
+  font-weight: 600;
+  margin: 0 0 ${({ theme }) => theme.spacing.xsmall} 0;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const PostSummary = styled.p`
-  font-size: 0.9rem;
-  color: #666;
+  font-size: ${({ theme }) => theme.fontSizes.small};
+  color: ${({ theme }) => theme.colors.textSecondary};
   margin: 0;
+  line-height: 1.5;
 `;
 
 export const PostAuthor = styled.div`
-  color: #333;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: ${({ theme }) => theme.fontSizes.small};
+  font-weight: 500;
+  
   ${breakpointsMedia({
-    xs: css`
+  xs: css`
       width: 100%;
-      font-size: 0.9rem;
-      color: #555;
       &:before {
         content: 'Autor: ';
         font-weight: 600;
+        color: ${({ theme }) => theme.colors.text};
       }
     `,
-    md: css`
-      width: 25%;
-      font-size: 1rem;
+  md: css`
+      width: 20%;
+      text-align: left;
       &:before {
         content: '';
       }
     `,
-  })}
+})}
 `;
 
 export const PostActions = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 5px;
+  justify-content: flex-end;
+  gap: ${({ theme }) => theme.spacing.small};
 
   ${breakpointsMedia({
-    xs: css`
+  xs: css`
       width: 100%;
-      justify-content: flex-end; // Alinha botões à direita no mobile
-      margin-top: 10px;
-      border-top: 1px solid #eee;
-      padding-top: 10px;
+      justify-content: flex-start; 
+      padding-top: ${({ theme }) => theme.spacing.medium};
+      border-top: 1px solid ${({ theme }) => theme.colors.border};
     `,
-    md: css`
-      width: 15%;
-      justify-content: center;
-      margin-top: 0;
-      border-top: none;
+  md: css`
+      width: 20%;
+      justify-content: flex-end;
       padding-top: 0;
+      border-top: none;
     `,
-  })}
+})}
 `;
 
 export const PostCount = styled.p`
-  margin-top: 20px;
-  margin-bottom: 25px;
+  margin-top: ${({ theme }) => theme.spacing.large};
+  margin-bottom: ${({ theme }) => theme.spacing.large};
   text-align: right;
-  color: #666;
-  font-size: 0.9rem;
-  padding-right: 15px;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: ${({ theme }) => theme.fontSizes.small};
 `;

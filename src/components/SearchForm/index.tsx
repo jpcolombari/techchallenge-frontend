@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useRef } from 'react';
-import Input from '../Input';
 import Button from '../Button';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as S from './styles';
 
 type SearchFormProps = {
@@ -24,15 +24,12 @@ const SearchForm = ({
 }: SearchFormProps) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // REMOVIDO: A função handleSubmit foi removida.
-
   const handleClear = () => {
     setTerm('');
     onClear();
   };
 
   useEffect(() => {
-    // A lógica do autoSearch continua a mesma que você implementou
     if (!autoSearch) return;
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -52,22 +49,23 @@ const SearchForm = ({
   }, [term, autoSearch, debounceMs, onSearch, onClear]);
 
   return (
-    // REMOVIDO: O onSubmit foi removido do Wrapper
     <S.Wrapper>
-      <Input
+      <S.IconWrapper>
+        <FontAwesomeIcon icon={faSearch} />
+      </S.IconWrapper>
+      <S.Input
         name="search"
-        placeholder="Buscar por título ou conteúdo..."
-        icon={faSearch}
+        placeholder="Buscar por título, conteúdo ou autor..."
         value={term}
         onChange={(e) => setTerm(e.target.value)}
       />
 
-      {/* REMOVIDO: O botão "Buscar" foi removido */}
-
       {!!term && (
-        <Button type="button" variant="ghost" onClick={handleClear}>
-          Limpar
-        </Button>
+        <div style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+          <Button type="button" variant="ghost" onClick={handleClear} style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
+            Limpar
+          </Button>
+        </div>
       )}
     </S.Wrapper>
   );

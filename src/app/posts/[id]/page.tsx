@@ -6,6 +6,9 @@ import Text from '@/components/Text';
 import { getPostById, Post } from '@/services/api';
 import QuizSection from '@/components/QuizSection';
 import * as S from './page.styles';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
+import ReadingProgressBar from '@/components/ReadingProgressBar';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 type PostPageProps = {
   params: {
@@ -39,22 +42,35 @@ export default async function PostPage({ params }: PostPageProps) {
     );
   }
 
+  // Data com fallback se createdAt estiver ausente
+  const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-BR') : '17 Fev, 2026';
+
   return (
     <main>
+      <ReadingProgressBar />
       <Header />
       <Container>
         <S.Wrapper>
-          <BackButton />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <BackButton />
+            <Breadcrumbs items={[{ label: 'Posts' }, { label: post.title }]} />
+          </div>
           <S.PostHeader>
             <S.Title>{post.title}</S.Title>
-            <S.Author>Por {post.author}</S.Author>
+            <S.MetaInfo>
+              <S.Author>Por {post.author}</S.Author>
+              <span>•</span>
+              <time>{date}</time>
+            </S.MetaInfo>
           </S.PostHeader>
           <S.CoverImage
             src="/images/banner.jpeg"
             alt={`Imagem de capa do post: ${post.title}`}
           />
           <S.TextCard>
-            <S.Content>{post.content}</S.Content>
+            <S.Content>
+              <MarkdownRenderer content={post.content} />
+            </S.Content>
             {post.quiz && (
               <QuizSection
                 question={post.quiz.question}

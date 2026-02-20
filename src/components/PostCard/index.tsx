@@ -8,9 +8,10 @@ export type PostCardProps = {
   author: string;
   summary: string;
   date?: string;
+  isAnswered?: boolean;
 };
 
-const PostCard = ({ title, author, summary, date }: PostCardProps) => {
+const PostCard = ({ title, author, summary, date, isAnswered }: PostCardProps) => {
   return (
     <S.Wrapper>
       <Heading as="h2" size="medium">
@@ -23,6 +24,12 @@ const PostCard = ({ title, author, summary, date }: PostCardProps) => {
           <>
             <span>•</span>
             <time>{date}</time>
+          </>
+        )}
+        {isAnswered && (
+          <>
+            <span>•</span>
+            <S.AnsweredFlag>✅ Respondido</S.AnsweredFlag>
           </>
         )}
       </S.MetaInfo>

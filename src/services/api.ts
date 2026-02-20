@@ -103,4 +103,16 @@ export const deletePost = async (id: string) =>
 export const generateQuiz = async (content: string): Promise<{ question: string; answer: boolean; explanation: string }> =>
   api.post("/posts/generate-quiz", { content }).then((res) => res.data);
 
+export const getUserProfile = async () =>
+  api.get("/users/me").then((res) => res.data);
+
+export const submitAnswer = async (postId: string, answer: boolean) =>
+  api.post(`/answers/${postId}`, { answer }).then((res) => res.data);
+
+export const checkAnswerStatus = async (postId: string) =>
+  api.get(`/answers/${postId}/me`).then((res) => res.data);
+
+export const getAnsweredPosts = async (): Promise<{ answeredPostIds: string[] }> =>
+  api.get("/answers/me/all").then((res) => res.data);
+
 export default api;

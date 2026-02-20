@@ -1,26 +1,59 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../Button";
+import { useAuth } from "@/contexts/AuthContext";
+import { checkAnswerStatus, submitAnswer } from "@/services/api";
 
 type QuizSectionProps = {
+  postId: string;
   question: string;
   answer: boolean;
   explanation: string;
 };
 
-const QuizSection = ({ question, answer, explanation }: QuizSectionProps) => {
+const QuizSection = ({ postId, question, answer, explanation }: QuizSectionProps) => {
+  const { user, isAuthenticated, updateScore } = useAuth();
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [hasAnswered, setHasAnswered] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAnswer = (userChoice: boolean) => {
-    setSelectedAnswer(userChoice);
-    setIsCorrect(userChoice === answer);
-  };
+  useEffect(() => {
+    if (user?.role === 'STUDENT') {
+      checkAnswerStatus(postId)
+        .then((res) => {
+          if (res.answered) {
+            setHasAnswered(true);
+            setIsCorrect(res.isCorrect);
+            setSelectedAnswer(res.isCorrect ? answer : !answer);
+          }
+          setIsLoading(false);
+        })
+        .catch(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
+    }
+  }, [postId, user, answer]);
 
-  const handleReset = () => {
-    setSelectedAnswer(null);
-    setIsCorrect(null);
+  const handleAnswer = async (userChoice: boolean) => {
+    if (!isAuthenticated || user?.role !== 'STUDENT') return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await submitAnswer(postId, userChoice);
+      setSelectedAnswer(userChoice);
+      setIsCorrect(res.isCorrect);
+      setHasAnswered(true);
+      if (res.isCorrect) {
+        updateScore(10);
+      }
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "Erro ao responder o quiz.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!question) return null;
@@ -57,13 +90,19 @@ const QuizSection = ({ question, answer, explanation }: QuizSectionProps) => {
         {question}
       </p>
 
-      {selectedAnswer === null ? (
+      {isLoading ? (
+        <p>Carregando desafio...</p>
+      ) : !isAuthenticated || user?.role !== 'STUDENT' ? (
+        <div style={{ padding: "1rem", backgroundColor: "#f1f5f9", borderRadius: "0.5rem" }}>
+          <p>Faça login como <strong>Estudante</strong> para responder aos desafios e ganhar pontos!</p>
+        </div>
+      ) : !hasAnswered ? (
         <div style={{ display: "flex", gap: "1rem" }}>
-          <Button onClick={() => handleAnswer(true)} variant="primary">
-            Verdadeiro
+          <Button onClick={() => handleAnswer(true)} variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Enviando...' : 'Verdadeiro'}
           </Button>
-          <Button onClick={() => handleAnswer(false)} variant="secondary">
-            Falso
+          <Button onClick={() => handleAnswer(false)} variant="secondary" disabled={isSubmitting}>
+            {isSubmitting ? 'Enviando...' : 'Falso'}
           </Button>
         </div>
       ) : (
@@ -79,14 +118,13 @@ const QuizSection = ({ question, answer, explanation }: QuizSectionProps) => {
             }}
           >
             <strong style={{ display: "block", marginBottom: "0.5rem" }}>
-              {isCorrect ? "✅ Resposta Correta!" : "❌ Resposta Incorreta"}
+              {isCorrect ? "✅ Resposta Correta! (+10 pontos)" : "❌ Resposta Incorreta"}
             </strong>
             <p>{explanation}</p>
           </div>
-
-          <Button onClick={handleReset} variant="ghost">
-            Tentar Novamente
-          </Button>
+          <div style={{ padding: "0.5rem 1rem", backgroundColor: "#f1f5f9", borderRadius: "0.5rem", display: "inline-block" }}>
+            🏁 Você já respondeu este desafio.
+          </div>
         </div>
       )}
     </div>

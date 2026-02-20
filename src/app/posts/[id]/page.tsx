@@ -73,6 +73,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </S.Content>
             {post.quiz && (
               <QuizSection
+                postId={post._id}
                 question={post.quiz.question}
                 answer={post.quiz.answer}
                 explanation={post.quiz.explanation}

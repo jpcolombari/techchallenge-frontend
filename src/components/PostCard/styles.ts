@@ -9,11 +9,22 @@ export const MetaInfo = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: ${({ theme }) => theme.spacing.small};
   align-items: center;
+  flex-wrap: wrap; // added to avoid overflow
   
   span, time {
     display: inline-flex;
     align-items: center;
   }
+`;
+
+export const AnsweredFlag = styled.span`
+  background-color: ${({ theme }) => theme.colors.success + '20'}; // 20% opacity using alpha hex
+  color: ${({ theme }) => theme.colors.success};
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border: 1px solid ${({ theme }) => theme.colors.success + '50'};
 `;
 
 export const Tag = styled.span`

@@ -9,8 +9,7 @@ import LoginModal from '../LoginModal';
 import RegisterModal from '../RegisterModal';
 
 const Header = () => {
-  // Puxe o isLoading do contexto
-  const { isAuthenticated, logout, isLoading } = useAuth();
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
@@ -27,10 +26,17 @@ const Header = () => {
               {/* Se estiver carregando, não mostre nada */}
               {isLoading ? null : isAuthenticated ? (
                 <S.UserInfo>
-                  <Link href="/admin" passHref>
-                    <S.AdminLink>Painel</S.AdminLink>
-                  </Link>
-                  <span>Bem-vindo, Professor!</span>
+                  {user?.role === 'PROFESSOR' || user?.role === 'ADMIN' ? (
+                    <Link href="/admin" passHref>
+                      <S.AdminLink>Painel</S.AdminLink>
+                    </Link>
+                  ) : null}
+                  <span>Bem-vindo, {user?.name || 'Estudante'}!</span>
+                  {user?.role === 'STUDENT' && (
+                    <S.ScoreBadge>
+                      🏆 Pontuação: {user?.score || 0}
+                    </S.ScoreBadge>
+                  )}
                   <Button variant="ghost" onClick={logout}>
                     Sair
                   </Button>

@@ -86,6 +86,28 @@ export const AdminLink = styled.a`
   }
 `;
 
+export const ScoreBadge = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.surface || '#fff'};
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fontSizes.small};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  ${breakpointsMedia({
+  xs: css`
+      display: none; // opcional: esconder ou mostrar no mobile
+    `,
+  sm: css`
+      display: flex;
+    `,
+})}
+`;
+
 export const LoggedOutButtons = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.small};

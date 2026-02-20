@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Container from '@/components/Container';
 import Header from '@/components/Header';
 import PostCard from '@/components/PostCard';
-import { getPosts, type Post } from '@/services/api';
+import { getPosts, getAnsweredPosts, type Post } from '@/services/api';
+import { useAuth } from '@/contexts/AuthContext';
 import Heading from '@/components/Heading';
 import * as S from './page.styles';
 import SearchForm from '@/components/SearchForm';
@@ -24,6 +25,8 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [answeredPostIds, setAnsweredPostIds] = useState<string[]>([]);
+  const { isAuthenticated, user } = useAuth();
 
   const fetchPosts = async (pageNumber: number) => {
     setIsLoading(true);
@@ -41,6 +44,16 @@ export default function Home() {
   useEffect(() => {
     fetchPosts(page);
   }, [page]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'STUDENT') {
+      getAnsweredPosts()
+        .then((res: { answeredPostIds: string[] }) => setAnsweredPostIds(res.answeredPostIds))
+        .catch((err: unknown) => console.error('Falha ao buscar posts respondidos', err));
+    } else {
+      setAnsweredPostIds([]);
+    }
+  }, [isAuthenticated, user]);
 
   const filteredPosts = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
@@ -109,6 +122,7 @@ export default function Home() {
                       author={post.author}
                       summary={summary}
                       date={post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-BR') : getRandomDate()}
+                      isAnswered={answeredPostIds.includes(post._id)}
                     />
                   </Link>
                 );

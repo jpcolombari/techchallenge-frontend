@@ -14,6 +14,11 @@ Este repositório contém o código-fonte do projeto de front-end para a platafo
 > 1.  **Primeiro, "acorde" o back-end:** Acesse a URL da API, por exemplo, a documentação do Swagger: **[https://techchallengeblog.onrender.com/api](https://techchallengeblog.onrender.com/api)**. Aguarde cerca de 30-60 segundos até a página carregar completamente.
 > 2.  **Agora, acesse o front-end:** Abra a URL da aplicação: **[https://techchallenge-frontend-main.onrender.com/](https://techchallenge-frontend-main.onrender.com/)**. Como o back-end já está ativo, a aplicação carregará os posts corretamente.
 
+### 🔑 Credenciais de Acesso (Teste)
+Para testar a plataforma completa (criação de artigos, deleção, geração de quizzes com IA), faça login usando a conta padrão preexistente de **Professor**:
+* **E-mail:** `professor@professor.com`
+* **Senha:** `Teste@123`
+
 ## 🛠️ Tecnologias Utilizadas
 
 * **React & Next.js:** Framework para a construção da interface de usuário.

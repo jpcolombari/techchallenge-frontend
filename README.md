@@ -39,6 +39,13 @@ A aplicação foi estruturada seguindo as melhores práticas do ecossistema Reac
 
 5.  **Estilização:** Optamos por **Styled Components** para uma abordagem de CSS-in-JS, que permite escrever CSS diretamente nos arquivos de componente. Isso garante que os estilos sejam escopados e viajem junto com seus respectivos componentes.
 
+## 🎮 Gamificação e Desafios de IA
+
+A plataforma conta com um sistema de engajamento onde os alunos podem responder a desafios gerados dinamicamente.
+* **Quizzes com IA:** Ao acessar um Post, a aplicação exibe uma pergunta interpretativa do conteúdo, gerada no back-end utilizando a API do Google Gemini.
+* **Pontuação Exclusiva:** Estudantes logados recebem pontos (+10) visualizados instantaneamente no _Header_ da aplicação ao responderem corretamente às questões.
+* **Fluxo Bloqueante:** A validação é estrita, o aluno tem somente 1 tentativa por post. A interface aplica a tag "✅ Respondido" na Home Page e inibe os botões de ação após a conclusão do quiz.
+
 ## ⚙️ Ambiente de Desenvolvimento e Produção
 
 Existem duas formas principais de rodar o projeto, cada uma com um objetivo diferente.
